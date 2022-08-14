@@ -13,8 +13,8 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
-    }
 
+    }
     public IActionResult Index()
     {
         var todoListViewModel = GetAllTodos();
@@ -115,7 +115,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, "Cannot insert value");
                 }
             }
         }
@@ -136,7 +136,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, "Cannot insert value");
                 }
             }
         }
@@ -151,7 +151,14 @@ public class HomeController : Controller
             {
                 con.Open();
                 cmd.CommandText = $"DELETE from todo WHERE Id = '{id}'";
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Cannot insert value");
+                }
             }
         }
         return Json(new { });

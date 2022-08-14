@@ -28,6 +28,7 @@ function populateForm(i) {
             $("#Todo_Id").val(response.id);
             $("#form-button").val("Update Todo");
             $("#form-action").attr("action", "/Home/Update");
+            $("#form-action").attr("method", "POST");
         }
     });
 }
