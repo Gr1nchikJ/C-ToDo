@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging.Configuration;
+using Serilog;
 using ToDo.Models;
 using ToDo.Models.ViewModels;
 
@@ -18,7 +20,28 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var todoListViewModel = GetAllTodos();
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsetting.json")
+            .Build();
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+        try
+        {
+            Log.Information("Application Starting Up");
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application failed to start correctly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
         return View(todoListViewModel);
+
     }
 
     public JsonResult PopulateForm(int id)
