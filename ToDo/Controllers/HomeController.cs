@@ -136,7 +136,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Cannot insert value");
+                    _logger.LogError(ex, "Cannot update value");
                 }
             }
         }
@@ -157,7 +157,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Cannot insert value");
+                    _logger.LogError(ex, "Cannot delete value");
                 }
             }
         }
