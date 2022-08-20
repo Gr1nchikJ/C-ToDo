@@ -22,23 +22,10 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        var todoListViewModel = GetAllTodos();
+        var todoListViewModel = _todoRepository.GetAllTodos();
 
+        Log.Information("Application Starting Up");
         
-
-        
-        try
-        {
-            Log.Information("Application Starting Up");
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "Application failed to start correctly");
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
         return View(todoListViewModel);
 
     }
