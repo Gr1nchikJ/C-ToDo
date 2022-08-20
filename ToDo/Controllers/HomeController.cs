@@ -45,83 +45,9 @@ public class HomeController : Controller
 
     public JsonResult PopulateForm(int id)
     {
-        var todo = GetById(id);
+        var todo = _todoRepository.GetById(id);
         return Json(todo);
-    }
-
-    internal TodoViewModel GetAllTodos()
-    {
-        List<TodoItem> todoList = new();
-
-        using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
-        {
-            using (var tableCmd = con.CreateCommand())
-            {
-                con.Open();
-                tableCmd.CommandText = "SELECT * FROM todo";
-
-                using (var reader = tableCmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            todoList.Add(
-                                new TodoItem
-                                {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1)
-                                });
-                        }
-                    }
-                    else
-                    {
-                        return new TodoViewModel
-                        {
-                            TodoList = todoList
-                        };
-                    }
-                }
-            }
-
-
-        }
-
-        return new TodoViewModel
-        {
-            TodoList = todoList
-        };
-    }
-
-    internal TodoItem GetById(int id)
-    {
-        TodoItem todo = new();
-
-        using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
-        {
-            using (var tableCmd = con.CreateCommand())
-            {
-                con.Open();
-                tableCmd.CommandText = $"SELECT * FROM todo WHERE Id = '{id}'";
-
-                using (var reader = tableCmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        reader.Read();
-                        todo.Id = reader.GetInt32(0);
-                        todo.Name = reader.GetString(1);
-                    }
-                    else
-                    {
-                        return todo;
-                    }
-                };
-            }
-        }
-
-        return todo;
-    }
+    }   
 
     public RedirectResult Insert(TodoItem todo)
     {

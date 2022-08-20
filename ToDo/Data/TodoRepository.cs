@@ -2,11 +2,41 @@
 using Microsoft.Data.Sqlite;
 using Serilog;
 using ToDo.Models;
+using ToDo.Models.ViewModels;
 
 namespace ToDo.Data
 {
     public class TodoRepository : ITodoRepository
     {
+        public TodoItem GetById(int id)
+        {
+            TodoItem todo = new();
+
+            using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
+            {
+                using (var tableCmd = con.CreateCommand())
+                {
+                    con.Open();
+                    tableCmd.CommandText = $"SELECT * FROM todo WHERE Id = '{id}'";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            todo.Id = reader.GetInt32(0);
+                            todo.Name = reader.GetString(1);
+                        }
+                        else
+                        {
+                            return todo;
+                        }
+                    };
+                }
+            }
+
+            return todo;
+        }
         public void Insert(TodoItem todo)
         {
             using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
@@ -26,6 +56,49 @@ namespace ToDo.Data
                 }
             }
 
+        }
+        public TodoViewModel GetAllTodos()
+        {
+            List<TodoItem> todoList = new();
+
+            using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
+            {
+                using (var tableCmd = con.CreateCommand())
+                {
+                    con.Open();
+                    tableCmd.CommandText = "SELECT * FROM todo";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                todoList.Add(
+                                    new TodoItem
+                                    {
+                                        Id = reader.GetInt32(0),
+                                        Name = reader.GetString(1)
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            return new TodoViewModel
+                            {
+                                TodoList = todoList
+                            };
+                        }
+                    }
+                }
+
+
+            }
+
+            return new TodoViewModel
+            {
+                TodoList = todoList
+            };
         }
 
         public void Update(TodoItem todo)
