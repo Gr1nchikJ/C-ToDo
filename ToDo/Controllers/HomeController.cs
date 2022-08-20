@@ -6,17 +6,19 @@ using Serilog;
 using Serilog.Events;
 using ToDo.Models;
 using ToDo.Models.ViewModels;
+using ToDo.Data;
 
 namespace ToDo.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ITodoRepository _todoRepository;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ITodoRepository todoRepository)
     {
         _logger = logger;
-
+        _todoRepository = todoRepository;
     }
     public IActionResult Index()
     {
@@ -123,64 +125,19 @@ public class HomeController : Controller
 
     public RedirectResult Insert(TodoItem todo)
     {
-        using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
-        {
-            using (var cmd = con.CreateCommand())
-            {
-                con.Open();
-                cmd.CommandText = $"INSERT INTO todo (name) VALUES ('{todo.Name}')";
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Cannot insert value");
-                }
-            }
-        }
+        _todoRepository.Insert(todo);
         return Redirect("https://localhost:7161/");
     }
 
     public RedirectResult Update(TodoItem todo)
     {
-        using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
-        {
-            using (var cmd = con.CreateCommand())
-            {
-                con.Open();
-                cmd.CommandText = $"UPDATE todo SET name = '{todo.Name}' WHERE Id = '{todo.Id}'";
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Cannot update value");
-                }
-            }
-        }
+        _todoRepository.Update(todo);
         return Redirect("https://localhost:7161/");
     }
 
     public JsonResult Delete(int id)
     {
-        using (SqliteConnection con = new SqliteConnection("Data Source=db.sqlite"))
-        {
-            using (var cmd = con.CreateCommand())
-            {
-                con.Open();
-                cmd.CommandText = $"DELETE from todo WHERE Id = '{id}'";
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Cannot delete value");
-                }
-            }
-        }
+        _todoRepository.Delete(id);
         return Json(new { });
     }
 }

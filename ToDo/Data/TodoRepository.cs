@@ -1,13 +1,11 @@
-﻿
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Serilog;
 using ToDo.Models;
 
 namespace ToDo.Data
 {
-    public class TodoRepository
+    public class TodoRepository : ITodoRepository
     {
         public void Insert(TodoItem todo)
         {
@@ -27,7 +25,7 @@ namespace ToDo.Data
                     }
                 }
             }
-            
+
         }
 
         public void Update(TodoItem todo)
@@ -48,7 +46,7 @@ namespace ToDo.Data
                     }
                 }
             }
-            
+
         }
 
         public void Delete(int id)
@@ -69,7 +67,7 @@ namespace ToDo.Data
                     }
                 }
             }
-            
+
         }
     }
 }

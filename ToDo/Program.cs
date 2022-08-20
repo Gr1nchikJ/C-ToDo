@@ -1,5 +1,5 @@
 using Serilog;
-
+using ToDo.Data;
 var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(Log.Logger);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
