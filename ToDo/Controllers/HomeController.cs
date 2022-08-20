@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
+using Serilog.Events;
 using ToDo.Models;
 using ToDo.Models.ViewModels;
 
@@ -21,13 +22,9 @@ public class HomeController : Controller
     {
         var todoListViewModel = GetAllTodos();
 
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
+        
 
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
+        
         try
         {
             Log.Information("Application Starting Up");
@@ -138,7 +135,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Cannot insert value");
+                    Log.Error(ex, "Cannot insert value");
                 }
             }
         }
@@ -159,7 +156,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Cannot update value");
+                    Log.Error(ex, "Cannot update value");
                 }
             }
         }
@@ -180,7 +177,7 @@ public class HomeController : Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Cannot delete value");
+                    Log.Error(ex, "Cannot delete value");
                 }
             }
         }
