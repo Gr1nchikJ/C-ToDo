@@ -19,6 +19,7 @@ builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
+app.UseHttpLogging();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
