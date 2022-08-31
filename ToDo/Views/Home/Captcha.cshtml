@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Captcha";
+}
+
+<h1>Captcha</h1>
+<form asp-action="CaptchaPost" id="form-action" method="post" class="form-horizontal" role="form">
+    <input type="hidden" name="captchaToken" id="captchaToken" />
+    <input type="submit" id="form-button" class="btn btn-success" value="START" />
+</form>

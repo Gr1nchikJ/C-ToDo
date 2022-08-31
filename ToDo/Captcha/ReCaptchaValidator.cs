@@ -15,7 +15,7 @@ namespace ToDo.Captcha
         {
             _httpClientFactory = httpClient;
             _secretKey = configuration["ReCaptcha:SecretKey"];
-            acceptableScore = double.Parse(configuration["ReCaptcha:AcceptableScore"]);
+            acceptableScore = Convert.ToDouble(configuration["ReCaptcha:AcceptableScore"]);
         }
         public async Task<bool> IsCaptchaPassedAsync(string token)
         {

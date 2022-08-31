@@ -1,4 +1,5 @@
 using Serilog;
+using ToDo.Captcha;
 using ToDo.Data;
 var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -16,6 +17,8 @@ builder.Host.UseSerilog(Log.Logger);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddHttpClient<ReCaptchaValidator>();
+builder.Services.AddScoped<ICaptchaValidator, ReCaptchaValidator>();
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
@@ -39,6 +42,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Captcha}/{id?}");
 
 app.Run();
