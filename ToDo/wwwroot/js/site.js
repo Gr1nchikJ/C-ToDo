@@ -5,7 +5,7 @@
 
 function deleteTodo(i) {
     $.ajax({
-        url: 'Home/Delete',
+        url: 'Delete',
         type: 'POST',
         data: {
             id: i
@@ -17,7 +17,7 @@ function deleteTodo(i) {
 }
 function populateForm(i) {
     $.ajax({
-        url: 'Home/PopulateForm',
+        url: 'PopulateForm',
         type: 'GET',
         data: {
             id: i

@@ -49,8 +49,8 @@ public class HomeController : Controller
             ModelState.AddModelError("", "Captcha validation failed");
             return View("Captcha");
         }
-        return Redirect("https://localhost:7161/");
 
+        return RedirectToAction("Index", "Home");
     }
     public JsonResult PopulateForm(int id)
     {
@@ -58,16 +58,16 @@ public class HomeController : Controller
         return Json(todo);
     }   
 
-    public RedirectResult Insert(TodoItem todo)
+    public IActionResult Insert(TodoItem todo)
     {
         _todoRepository.Insert(todo);
-        return Redirect("https://localhost:7161/");
+        return RedirectToAction("Index", "Home");
     }
 
-    public RedirectResult Update(TodoItem todo)
+    public IActionResult Update(TodoItem todo)
     {
         _todoRepository.Update(todo);
-        return Redirect("https://localhost:7161/");
+        return RedirectToAction("Index", "Home");
     }
 
     public JsonResult Delete(int id)
