@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using ToDo.Captcha;
 using ToDo.Data;
+using ToDoEntityFramework;
+
 var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
@@ -16,6 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(Log.Logger);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<TodoContext>(options =>
+{
+    options.UseSqlite("Data Source = ToDoData.db");
+});
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddHttpClient<ReCaptchaValidator>();
 builder.Services.AddScoped<ICaptchaValidator, ReCaptchaValidator>();
