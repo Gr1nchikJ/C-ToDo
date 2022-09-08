@@ -6,7 +6,7 @@ namespace ToDo.Captcha
 {
     public class ReCaptchaValidator : ICaptchaValidator
     {
-        private const string RemoteAddress = "";
+        private const string RemoteAddress = "https://www.google.com/recaptcha/api/siteverify";
         private readonly string _secretKey;
         private readonly double acceptableScore;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,14 +15,14 @@ namespace ToDo.Captcha
         {
             _httpClientFactory = httpClient;
             _secretKey = configuration["ReCaptcha:SecretKey"];
-            acceptableScore = double.Parse(configuration["ReCaptcha:AcceptableScore"]);
+            acceptableScore = Convert.ToDouble(configuration["ReCaptcha:AcceptableScore"]);
         }
         public async Task<bool> IsCaptchaPassedAsync(string token)
         {
             dynamic responce = await GetCaptchaResultDataAsync(token);
             if (responce.success == "true")
             {
-                return System.Convert.ToDouble(responce.score) >= acceptableScore;
+                return Convert.ToDouble(responce.score) >= acceptableScore;
             }
             return false;
         }
@@ -32,7 +32,7 @@ namespace ToDo.Captcha
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("secret", _secretKey),
-                new KeyValuePair<string, string>("responce", token)
+                new KeyValuePair<string, string>("response", token)
             });
             using var httpClient = _httpClientFactory.CreateClient();
             var res = await httpClient.PostAsync(RemoteAddress, content);
