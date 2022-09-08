@@ -3,6 +3,8 @@ using Serilog;
 using ToDo.Captcha;
 using ToDo.Data;
 using ToDoEntityFramework;
+using Microsoft.AspNetCore.Identity;
+using ToDo.Areas.Identity.Data;
 
 var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -14,6 +16,7 @@ Log.Logger = new LoggerConfiguration()
 
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDbContextConnection' not found.");
 
 
 builder.Host.UseSerilog(Log.Logger);
@@ -23,7 +26,10 @@ builder.Services.AddDbContext<TodoContext>(options =>
 {
     options.UseSqlite("Data Source = ToDoData.db");
 });
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+
+builder.Services.AddDefaultIdentity<ToDoUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<IdentityDbContext>();
+builder.Services.AddScoped<ITodoRepository, TodoEFRepository>();
 builder.Services.AddHttpClient<ReCaptchaValidator>();
 builder.Services.AddScoped<ICaptchaValidator, ReCaptchaValidator>();
 
@@ -44,11 +50,13 @@ app.UseStaticFiles();
 
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Captcha}/{id?}");
-
+app.MapRazorPages();
 app.Run();
+
