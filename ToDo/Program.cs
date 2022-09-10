@@ -28,11 +28,9 @@ builder.Services.AddDbContext<TodoContext>(options =>
     options.UseSqlite("Data Source = ToDoData.db");
 });
 builder.Services.AddDbContext<IdentityDbContext>(options =>
-                    {
-                        options.UseSqlite(
-                          "ToDo.db");
-                        });
-
+{
+    options.UseSqlite(connectionString);
+});
 builder.Services.AddDefaultIdentity<ToDoUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<IdentityDbContext>();
 builder.Services.AddScoped<ITodoRepository, TodoEFRepository>();
