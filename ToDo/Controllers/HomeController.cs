@@ -8,6 +8,7 @@ using ToDo.Models;
 using ToDo.Models.ViewModels;
 using ToDo.Data;
 using ToDo.Captcha;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ToDo.Controllers;
 
@@ -23,6 +24,7 @@ public class HomeController : Controller
         _todoRepository = todoRepository;
         _captchaValidator = captchaValidator;
     }
+    [Authorize]
     public IActionResult Index()
     {
         var todoListViewModel = _todoRepository.GetAllTodos();
