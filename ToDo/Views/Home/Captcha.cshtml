@@ -3,12 +3,16 @@
 @{
     ViewData["Title"] = "Captcha";
 }
-<h1>Captcha</h1>
+<div class="d-flex justify-content-center">
+    <h1>Captcha</h1>
+</div>
+<div class="d-flex justify-content-center">
+    <form asp-action="CaptchaPost" id="form-action" method="post" class="form-horizontal" role="form">
+        <input type="hidden" name="captchaToken" id="captchaToken" />
+        <input type="submit" id="form-button" class="btn btn-outline-success" data-mdb-ripple-color="dark" value="START" />
+    </form>
+</div>
 
-<form asp-action="CaptchaPost" id="form-action" method="post" class="form-horizontal" role="form">
-    <input type="hidden" name="captchaToken" id="captchaToken" />
-    <input type="submit" id="form-button" class="btn btn-success" value="START" />
-</form>
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script><script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lchh9UhAAAAAF963hoSa0N_DIQGQkey7jo9TaSD"></script>
